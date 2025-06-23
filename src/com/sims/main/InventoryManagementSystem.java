@@ -1,16 +1,18 @@
 package com.sims.main;
 
-import com.sims.services.*;
 import com.sims.models.*;
-import java.util.*;
+import com.sims.services.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class InventoryManagementSystem {
     private static InventoryManager inventoryManager;
     private static UserManager userManager;
     private static User currentUser;
-    private static Scanner scanner = new Scanner(System.in);
+    final private static Scanner scanner = new Scanner(System.in);
     
     public static void main(String[] args) {
         System.out.println("=== Smart Inventory Management System (SIMS) ===");
@@ -30,8 +32,8 @@ public class InventoryManagementSystem {
             showLoginMenu();
         }
         
-        // Main application loop
-        showDashboard();
+        showEnhancedDashboard();
+        
         while (true) {
             showMainMenu();
         }
@@ -46,17 +48,10 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                handleLogin();
-                break;
-            case 2:
-                handleRegistration();
-                break;
-            case 3:
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Invalid choice!");
+            case 1 -> handleLogin();
+            case 2 -> handleRegistration();
+            case 3 -> System.exit(0);
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -91,54 +86,39 @@ public class InventoryManagementSystem {
         }
     }
     
-    private static void showDashboard() {
-        System.out.println("\n=== Dashboard ===");
-        System.out.println("Total Items: " + inventoryManager.getTotalItems());
-        System.out.println("Low Stock Alerts: " + AlertManager.getLowStockCount(inventoryManager.getAllItems()));
-        System.out.println("Expiring Soon: " + AlertManager.getExpiringItemsCount(inventoryManager.getAllItems()));
-        AlertManager.showDailyAlerts(inventoryManager.getAllItems());
-    }
-    
     private static void showMainMenu() {
         System.out.println("\n=== Main Menu ===");
         System.out.println("1. Item Management");
         System.out.println("2. Category Management");
         System.out.println("3. Search & Barcode");
         System.out.println("4. Reports & Export");
-        System.out.println("5. User Management");
-        System.out.println("6. System Settings");
-        System.out.println("7. Logout");
+        System.out.println("5. Supplier Management");
+        System.out.println("6. Analytics Dashboard"); 
+        System.out.println("7. System Notifications");
+        System.out.println("8. User Management");
+        System.out.println("9. System Settings");
+        System.out.println("10. Logout");
         System.out.print("Choice: ");
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                showItemMenu();
-                break;
-            case 2:
-                showCategoryMenu();
-                break;
-            case 3:
-                showSearchMenu();
-                break;
-            case 4:
-                showReportsMenu();
-                break;
-            case 5:
+            case 1 -> showItemMenu();
+            case 2 -> showCategoryMenu();
+            case 3 -> showSearchMenu();
+            case 4 -> showReportsMenu();
+            case 5 -> showSupplierMenu(); // NEW
+            case 6 -> showAnalyticsDashboard(); // NEW
+            case 7 -> showNotifications(); // NEW
+            case 8 -> {
                 if (currentUser.getRole().equals("Admin")) {
                     showUserMenu();
                 } else {
                     System.out.println("Access denied! Admin only.");
                 }
-                break;
-            case 6:
-                showSettingsMenu();
-                break;
-            case 7:
-                logout();
-                break;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            case 9 -> showSettingsMenu();
+            case 10 -> logout();
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -153,22 +133,14 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                addItem();
-                break;
-            case 2:
-                viewAllItems();
-                break;
-            case 3:
-                updateItem();
-                break;
-            case 4:
-                deleteItem();
-                break;
-            case 5:
+            case 1 -> addItem();
+            case 2 -> viewAllItems();
+            case 3 -> updateItem();
+            case 4 -> deleteItem();
+            case 5 -> {
                 return;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -308,19 +280,13 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                viewCategories();
-                break;
-            case 2:
-                viewItemsByCategory();
-                break;
-            case 3:
-                showCategorySummary();
-                break;
-            case 4:
+            case 1 -> viewCategories();
+            case 2 -> viewItemsByCategory();
+            case 3 -> showCategorySummary();
+            case 4 -> {
                 return;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -349,7 +315,7 @@ public class InventoryManagementSystem {
         
         System.out.println("\n=== Items in " + category + " ===");
         for (Item item : items) {
-            System.out.printf("%s - %s (Qty: %d, Price: $%.2f)%n",
+            System.out.printf("%s - %s (Qty: %d, Price: Rs%.2f)%n",
                 item.getId(), item.getName(), item.getQuantity(), item.getPrice());
         }
     }
@@ -381,22 +347,14 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                searchByName();
-                break;
-            case 2:
-                searchByCategory();
-                break;
-            case 3:
-                searchById();
-                break;
-            case 4:
-                barcodeSearch();
-                break;
-            case 5:
+            case 1 -> searchByName();
+            case 2 -> searchByCategory();
+            case 3 -> searchById();
+            case 4 -> barcodeSearch();
+            case 5 -> {
                 return;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -473,25 +431,15 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                exportToCsv();
-                break;
-            case 2:
-                createBackup();
-                break;
-            case 3:
-                viewTransactionLog();
-                break;
-            case 4:
-                showLowStockReport();
-                break;
-            case 5:
-                showExpiryReport();
-                break;
-            case 6:
+            case 1 -> exportToCsv();
+            case 2 -> createBackup();
+            case 3 -> viewTransactionLog();
+            case 4 -> showLowStockReport();
+            case 5 -> showExpiryReport();
+            case 6 -> {
                 return;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -577,19 +525,13 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                viewAllUsers();
-                break;
-            case 2:
-                addUser();
-                break;
-            case 3:
-                deleteUser();
-                break;
-            case 4:
+            case 1 -> viewAllUsers();
+            case 2 -> addUser();
+            case 3 -> deleteUser();
+            case 4 -> {
                 return;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -661,19 +603,13 @@ public class InventoryManagementSystem {
         
         int choice = getIntInput();
         switch (choice) {
-            case 1:
-                changePassword();
-                break;
-            case 2:
-                showSystemInfo();
-                break;
-            case 3:
-                System.out.println("Auto backup is enabled daily at system startup.");
-                break;
-            case 4:
+            case 1 -> changePassword();
+            case 2 -> showSystemInfo();
+            case 3 -> System.out.println("Auto backup is enabled daily at system startup.");
+            case 4 -> {
                 return;
-            default:
-                System.out.println("Invalid choice!");
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
     
@@ -723,7 +659,7 @@ public class InventoryManagementSystem {
         while (currentUser == null) {
             showLoginMenu();
         }
-        showDashboard();
+        showEnhancedDashboard();
     }
     
     private static void logTransaction(String action, String details) {
@@ -747,5 +683,332 @@ public class InventoryManagementSystem {
         } catch (NumberFormatException e) {
             return 0.0;
         }
+    }
+
+    private static SupplierManager supplierManager = new SupplierManager(); // Add this as class variable
+
+    private static void showSupplierMenu() {
+        System.out.println("\n=== Supplier Management ===");
+        System.out.println("1. Add Supplier");
+        System.out.println("2. View All Suppliers");
+        System.out.println("3. Search Supplier");
+        System.out.println("4. Back");
+        System.out.print("Choice: ");
+        
+        int choice = getIntInput();
+        switch (choice) {
+            case 1 -> addSupplier();
+            case 2 -> viewAllSuppliers();
+            case 3 -> searchSupplier();
+            case 4 -> {
+                return;
+            }
+            default -> System.out.println("Invalid choice!");
+        }
+    }
+
+    private static void addSupplier() {
+        System.out.println("\n=== Add New Supplier ===");
+        System.out.print("Supplier Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Contact Person: ");
+        String contact = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        System.out.print("Phone: ");
+        String phone = scanner.nextLine();
+        System.out.print("Address: ");
+        String address = scanner.nextLine();
+        
+        Supplier supplier = new Supplier(name, contact, email, phone, address);
+        if (supplierManager.addSupplier(supplier)) {
+            System.out.println("Supplier added successfully! ID: " + supplier.getId());
+            logTransaction("ADD_SUPPLIER", "Added supplier: " + name);
+        } else {
+            System.out.println("Failed to add supplier!");
+        }
+    }
+
+    private static void viewAllSuppliers() {
+        List<Supplier> suppliers = supplierManager.getAllSuppliers();
+        if (suppliers.isEmpty()) {
+            System.out.println("No suppliers found.");
+            return;
+        }
+        
+        System.out.println("\n=== Suppliers ===");
+        System.out.printf("%-10s %-20s %-20s %-15s%n", "ID", "Name", "Contact", "Phone");
+        System.out.println("-".repeat(70));
+        
+        for (Supplier supplier : suppliers) {
+            System.out.printf("%-10s %-20s %-20s %-15s%n",
+                supplier.getId(),
+                supplier.getName().length() > 20 ? supplier.getName().substring(0, 17) + "..." : supplier.getName(),
+                supplier.getContactPerson().length() > 20 ? supplier.getContactPerson().substring(0, 17) + "..." : supplier.getContactPerson(),
+                supplier.getPhone());
+        }
+    }
+
+    private static void searchSupplier() {
+        System.out.print("Enter supplier name to search: ");
+        String searchTerm = scanner.nextLine();
+        
+        List<Supplier> allSuppliers = supplierManager.getAllSuppliers();
+        List<Supplier> results = allSuppliers.stream()
+            .filter(s -> s.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        s.getContactPerson().toLowerCase().contains(searchTerm.toLowerCase()))
+            .collect(Collectors.toList());
+        
+        if (results.isEmpty()) {
+            System.out.println("No suppliers found matching: " + searchTerm);
+        } else {
+            System.out.println("\n=== Search Results ===");
+            for (Supplier supplier : results) {
+                System.out.printf("%s - %s (Contact: %s)%n",
+                    supplier.getId(), supplier.getName(), supplier.getContactPerson());
+            }
+        }
+    }
+
+    private static void showAnalyticsDashboard() {
+        System.out.println("\n=== Analytics Dashboard ===");
+        
+        List<Item> items = inventoryManager.getAllItems();
+        Map<String, Object> analytics = AnalyticsService.getInventoryAnalytics(items);
+        
+        System.out.printf("Total Items: %d%n", analytics.get("totalItems"));
+        System.out.printf("Total Value: $%.2f%n", analytics.get("totalValue"));
+        System.out.printf("Average Price: $%.2f%n", analytics.get("averagePrice"));
+        System.out.printf("Low Stock Percentage: %.1f%%%n", analytics.get("lowStockPercentage"));
+        
+        // Show purchase recommendations
+        List<String> recommendations = AnalyticsService.generatePurchaseRecommendations(items);
+        if (!recommendations.isEmpty()) {
+            System.out.println("\n=== Purchase Recommendations ===");
+            for (String rec : recommendations) {
+                System.out.println("• " + rec);
+            }
+        }
+        
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+
+    private static void showNotifications() {
+        System.out.println("\n=== System Notifications ===");
+        
+        // Generate fresh notifications
+        NotificationService.generateDailyNotifications(inventoryManager.getAllItems());
+        
+        // Show recent notifications
+        List<String> notifications = NotificationService.getRecentNotifications(10);
+        if (notifications.isEmpty()) {
+            System.out.println("No notifications to display.");
+        } else {
+            for (String notification : notifications) {
+                System.out.println(notification);
+            }
+        }
+        
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+
+    private static void showEnhancedDashboard() {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("=== SMART INVENTORY MANAGEMENT SYSTEM DASHBOARD ===");
+        System.out.println("=".repeat(60));
+        
+        // Welcome message
+        System.out.printf("Welcome back, %s (%s)%n", 
+            currentUser.getUsername(), currentUser.getRole());
+        System.out.println("Login Time: " + 
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy - HH:mm:ss")));
+        
+        // Get all items for calculations
+        List<Item> allItems = inventoryManager.getAllItems();
+        
+        // Calculate summary statistics
+        InventorySummary summary = calculateInventorySummary(allItems);
+        
+        System.out.println("\n" + "─".repeat(60));
+        System.out.println("📊 INVENTORY OVERVIEW");
+        System.out.println("─".repeat(60));
+        
+        // Basic inventory stats
+        System.out.printf("Total Items in System: %d%n", summary.totalItems);
+        System.out.printf("Total Categories: %d%n", summary.totalCategories);
+        System.out.printf("Total Inventory Value: $%.2f%n", summary.totalValue);
+        System.out.printf("Average Item Value: $%.2f%n", summary.averageItemValue);
+        
+        System.out.println("\n" + "─".repeat(60));
+        System.out.println("⚠️  ALERTS & ATTENTION REQUIRED");
+        System.out.println("─".repeat(60));
+        
+        // Critical alerts
+        if (summary.expiredItems > 0) {
+            System.out.printf("❌ EXPIRED ITEMS: %d items have expired and need immediate attention!%n", 
+                summary.expiredItems);
+        }
+        
+        if (summary.expiringItems > 0) {
+            System.out.printf("⏰ EXPIRING SOON: %d items will expire within 7 days%n", 
+                summary.expiringItems);
+        }
+        
+        if (summary.lowStockItems > 0) {
+            System.out.printf("📉 LOW STOCK: %d items need restocking%n", summary.lowStockItems);
+        }
+        
+        if (summary.outOfStockItems > 0) {
+            System.out.printf("🚫 OUT OF STOCK: %d items have zero quantity%n", summary.outOfStockItems);
+        }
+        
+        // If no alerts
+        if (summary.expiredItems == 0 && summary.expiringItems == 0 && 
+            summary.lowStockItems == 0 && summary.outOfStockItems == 0) {
+            System.out.println("✅ All items are in good condition - no immediate alerts!");
+        }
+        
+        // Top categories by value
+        if (!summary.topCategories.isEmpty()) {
+            System.out.println("\n" + "─".repeat(60));
+            System.out.println("🏆 TOP CATEGORIES BY VALUE");
+            System.out.println("─".repeat(60));
+            
+            int rank = 1;
+            for (Map.Entry<String, Double> entry : summary.topCategories.entrySet()) {
+                System.out.printf("%d. %s: $%.2f%n", rank++, entry.getKey(), entry.getValue());
+                if (rank > 5) break; // Show top 5
+            }
+        }
+        
+        // Recent activity (if you want to show last few transactions)
+        showRecentActivity();
+        
+        // Action recommendations
+        System.out.println("\n" + "─".repeat(60));
+        System.out.println("💡 RECOMMENDED ACTIONS");
+        System.out.println("─".repeat(60));
+        
+        if (summary.lowStockItems > 0) {
+            System.out.println("• Review low stock items and create purchase orders");
+        }
+        if (summary.expiredItems > 0) {
+            System.out.println("• Remove expired items from inventory");
+        }
+        if (summary.expiringItems > 0) {
+            System.out.println("• Plan promotions for items expiring soon");
+        }
+        if (summary.totalItems == 0) {
+            System.out.println("• Add items to start managing your inventory");
+        }
+        
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("Press Enter to continue to main menu...");
+        scanner.nextLine();
+    }
+
+    // Helper class to store summary data
+    private static class InventorySummary {
+        int totalItems;
+        int totalCategories;
+        double totalValue;
+        double averageItemValue;
+        int lowStockItems;
+        int outOfStockItems;
+        int expiringItems;
+        int expiredItems;
+        Map<String, Double> topCategories;
+        
+        InventorySummary() {
+            this.topCategories = new LinkedHashMap<>();
+        }
+    }
+
+    private static InventorySummary calculateInventorySummary(List<Item> items) {
+        InventorySummary summary = new InventorySummary();
+        
+        // Basic counts
+        summary.totalItems = items.size();
+        summary.totalCategories = inventoryManager.getCategories().size();
+        
+        // Value calculations
+        summary.totalValue = items.stream()
+            .mapToDouble(item -> item.getPrice() * item.getQuantity())
+            .sum();
+        
+        summary.averageItemValue = summary.totalItems > 0 ? 
+            summary.totalValue / summary.totalItems : 0;
+        
+        // Alert counts
+        summary.lowStockItems = (int) items.stream()
+            .filter(item -> item.getQuantity() <= item.getLowStockThreshold() && item.getQuantity() > 0)
+            .count();
+        
+        summary.outOfStockItems = (int) items.stream()
+            .filter(item -> item.getQuantity() == 0)
+            .count();
+        
+        summary.expiringItems = (int) items.stream()
+            .filter(Item::isExpiring)
+            .count();
+        
+        summary.expiredItems = (int) items.stream()
+            .filter(Item::isExpired)
+            .count();
+        
+        // Top categories by total value
+        Map<String, Double> categoryValues = items.stream()
+            .collect(Collectors.groupingBy(
+                Item::getCategory,
+                Collectors.summingDouble(item -> item.getPrice() * item.getQuantity())
+            ));
+        
+        summary.topCategories = categoryValues.entrySet().stream()
+            .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                LinkedHashMap::new
+            ));
+        
+        return summary;
+    }
+
+    private static void showRecentActivity() {
+        List<String> recentLogs = ExportUtils.getTransactionLogs();
+        if (!recentLogs.isEmpty()) {
+            System.out.println("\n" + "─".repeat(60));
+            System.out.println("📋 RECENT ACTIVITY (Last 5 transactions)");
+            System.out.println("─".repeat(60));
+            
+            int count = Math.min(5, recentLogs.size());
+            for (int i = recentLogs.size() - count; i < recentLogs.size(); i++) {
+                String log = recentLogs.get(i);
+                // Format the log entry for better readability
+                if (log.length() > 80) {
+                    log = log.substring(0, 77) + "...";
+                }
+                System.out.println("• " + log);
+            }
+        }
+    }
+
+    // You can also add this method to show a quick summary anytime
+    private static void showQuickSummary() {
+        List<Item> items = inventoryManager.getAllItems();
+        double totalValue = items.stream()
+            .mapToDouble(item -> item.getPrice() * item.getQuantity())
+            .sum();
+        
+        System.out.println("\n📊 Quick Summary:");
+        System.out.printf("Items: %d | Value: $%.2f | Low Stock: %d | Expiring: %d%n",
+            items.size(),
+            totalValue,
+            AlertManager.getLowStockCount(items),
+            AlertManager.getExpiringItemsCount(items)
+        );
     }
 }

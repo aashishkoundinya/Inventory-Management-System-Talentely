@@ -1,2 +1,16 @@
 [2025-06-22 22:48:08] admin - LOGIN: User logged in: admin
 [2025-06-22 22:49:41] admin - ADD_ITEM: Added item: Chocolate (ID: ITM55201655)
+[2025-06-22 22:57:01] aashish - LOGIN: User logged in: aashish
+[2025-06-23 09:15:27] admin - LOGIN: User logged in: admin
+[2025-06-23 09:17:02] admin - ADD_ITEM: Added item: iPhone 13 (ID: ITM60506F6D)
+[2025-06-23 09:19:18] admin - BACKUP: Created backup: backup_20250623_091918
+[2025-06-23 09:20:16] admin - UPDATE_ITEM: Updated item: ITM60506F6D
+[2025-06-23 09:24:29] admin - LOGIN: User logged in: admin
+[2025-06-23 09:35:08] admin - LOGIN: User logged in: admin
+[2025-06-23 19:46:40] admin - LOGIN: User logged in: admin
+[2025-06-23 19:47:55] admin - ADD_ITEM: Added item: Razer mouse (ID: ITMC328D8AC)
+[2025-06-23 19:48:49] admin - ADD_SUPPLIER: Added supplier: XYZ Traders
+[2025-06-23 19:50:41] admin - LOGIN: User logged in: admin
+[2025-06-23 19:52:00] admin - LOGIN: User logged in: admin
+[2025-06-23 19:59:14] admin - LOGIN: User logged in: admin
+[2025-06-23 20:04:07] aashish - LOGIN: User logged in: aashish
