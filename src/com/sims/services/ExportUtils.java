@@ -1,10 +1,7 @@
 package com.sims.services;
 
 import com.sims.models.Item;
-import com.sims.utils.FileManager;
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ExportUtils {
@@ -17,10 +14,8 @@ public class ExportUtils {
             file.getParentFile().mkdirs();
             
             try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-                // Write header
                 writer.println("ID,Name,Category,Quantity,Price,Description,LowStockThreshold,Barcode,ExpiryDate");
                 
-                // Write data
                 for (Item item : items) {
                     writer.printf("%s,%s,%s,%d,%.2f,%s,%d,%s,%s%n",
                         escapeCSV(item.getId()),
@@ -62,7 +57,7 @@ public class ExportUtils {
             
             copyDirectory(sourceDir, targetDir);
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Error creating backup: " + e.getMessage());
             return false;
         }

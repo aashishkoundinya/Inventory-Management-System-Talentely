@@ -2,6 +2,7 @@ package com.sims.services;
 
 import com.sims.models.Supplier;
 import com.sims.utils.FileManager;
+import java.io.IOException;
 import java.util.*;
 
 public class SupplierManager {
@@ -39,7 +40,7 @@ public class SupplierManager {
             if (data instanceof List<?>) {
                 this.suppliers = (List<Supplier>) data;
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             this.suppliers = new ArrayList<>();
         }
     }
@@ -47,7 +48,7 @@ public class SupplierManager {
     private void saveSuppliers() {
         try {
             FileManager.saveData(suppliers, SUPPLIERS_FILE);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Error saving supplier data: " + e.getMessage());
         }
     }

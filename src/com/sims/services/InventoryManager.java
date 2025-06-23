@@ -2,6 +2,7 @@ package com.sims.services;
 
 import com.sims.models.Item;
 import com.sims.utils.FileManager;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -97,7 +98,7 @@ public class InventoryManager {
             if (data instanceof List<?>) {
                 this.items = (List<Item>) data;
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("No existing inventory data found. Starting fresh.");
             this.items = new ArrayList<>();
         }
@@ -106,7 +107,7 @@ public class InventoryManager {
     private void saveItems() {
         try {
             FileManager.saveData(items, ITEMS_FILE);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Error saving inventory data: " + e.getMessage());
         }
     }

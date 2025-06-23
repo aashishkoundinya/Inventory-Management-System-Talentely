@@ -2,6 +2,7 @@ package com.sims.services;
 
 import com.sims.models.User;
 import com.sims.utils.FileManager;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -72,7 +73,7 @@ public class UserManager {
             if (data instanceof List<?>) {
                 this.users = (List<User>) data;
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("No existing user data found. Starting fresh.");
             this.users = new ArrayList<>();
         }
@@ -81,7 +82,7 @@ public class UserManager {
     private void saveUsers() {
         try {
             FileManager.saveData(users, USERS_FILE);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Error saving user data: " + e.getMessage());
         }
     }

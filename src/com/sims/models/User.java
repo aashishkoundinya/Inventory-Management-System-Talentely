@@ -9,7 +9,7 @@ public class User implements Serializable {
     private String passwordHash;
     private String role;
     private LocalDateTime lastLogin;
-    private LocalDateTime createdDate;
+    final private LocalDateTime createdDate;
     
     public User(String username, String passwordHash, String role) {
         this.username = username;

@@ -138,8 +138,8 @@ public class InventoryManagementSystem {
             case 3 -> updateItem();
             case 4 -> deleteItem();
             case 5 -> {
-                return;
             }
+
             default -> System.out.println("Invalid choice!");
         }
     }
@@ -284,7 +284,6 @@ public class InventoryManagementSystem {
             case 2 -> viewItemsByCategory();
             case 3 -> showCategorySummary();
             case 4 -> {
-                return;
             }
             default -> System.out.println("Invalid choice!");
         }
@@ -352,8 +351,8 @@ public class InventoryManagementSystem {
             case 3 -> searchById();
             case 4 -> barcodeSearch();
             case 5 -> {
-                return;
             }
+
             default -> System.out.println("Invalid choice!");
         }
     }
@@ -437,8 +436,8 @@ public class InventoryManagementSystem {
             case 4 -> showLowStockReport();
             case 5 -> showExpiryReport();
             case 6 -> {
-                return;
             }
+
             default -> System.out.println("Invalid choice!");
         }
     }
@@ -529,8 +528,8 @@ public class InventoryManagementSystem {
             case 2 -> addUser();
             case 3 -> deleteUser();
             case 4 -> {
-                return;
             }
+
             default -> System.out.println("Invalid choice!");
         }
     }
@@ -607,8 +606,8 @@ public class InventoryManagementSystem {
             case 2 -> showSystemInfo();
             case 3 -> System.out.println("Auto backup is enabled daily at system startup.");
             case 4 -> {
-                return;
             }
+
             default -> System.out.println("Invalid choice!");
         }
     }
@@ -685,7 +684,7 @@ public class InventoryManagementSystem {
         }
     }
 
-    private static SupplierManager supplierManager = new SupplierManager(); // Add this as class variable
+    final private static SupplierManager supplierManager = new SupplierManager();
 
     private static void showSupplierMenu() {
         System.out.println("\n=== Supplier Management ===");
@@ -701,8 +700,8 @@ public class InventoryManagementSystem {
             case 2 -> viewAllSuppliers();
             case 3 -> searchSupplier();
             case 4 -> {
-                return;
             }
+
             default -> System.out.println("Invalid choice!");
         }
     }
@@ -994,21 +993,5 @@ public class InventoryManagementSystem {
                 System.out.println("• " + log);
             }
         }
-    }
-
-    // You can also add this method to show a quick summary anytime
-    private static void showQuickSummary() {
-        List<Item> items = inventoryManager.getAllItems();
-        double totalValue = items.stream()
-            .mapToDouble(item -> item.getPrice() * item.getQuantity())
-            .sum();
-        
-        System.out.println("\n📊 Quick Summary:");
-        System.out.printf("Items: %d | Value: $%.2f | Low Stock: %d | Expiring: %d%n",
-            items.size(),
-            totalValue,
-            AlertManager.getLowStockCount(items),
-            AlertManager.getExpiringItemsCount(items)
-        );
     }
 }
