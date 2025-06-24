@@ -106,9 +106,9 @@ public class InventoryManagementSystem {
             case 2 -> showCategoryMenu();
             case 3 -> showSearchMenu();
             case 4 -> showReportsMenu();
-            case 5 -> showSupplierMenu(); // NEW
-            case 6 -> showAnalyticsDashboard(); // NEW
-            case 7 -> showNotifications(); // NEW
+            case 5 -> showSupplierMenu();
+            case 6 -> showAnalyticsDashboard();
+            case 7 -> showNotifications();
             case 8 -> {
                 if (currentUser.getRole().equals("Admin")) {
                     showUserMenu();
@@ -155,22 +155,36 @@ public class InventoryManagementSystem {
         System.out.print("Price: ");
         double price = getDoubleInput();
         System.out.print("Description: ");
-        scanner.nextLine(); // consume newline
         String description = scanner.nextLine();
         System.out.print("Low Stock Threshold: ");
         int threshold = getIntInput();
+        
         System.out.print("Expiry Date (YYYY-MM-DD, or press Enter to skip): ");
-        scanner.nextLine(); // consume newline
-        String expiryStr = scanner.nextLine();
+        String expiryStr = scanner.nextLine().trim();
         
         Item item = new Item(name, category, quantity, price, description, threshold);
+        
         if (!expiryStr.isEmpty()) {
-            item.setExpiryDate(expiryStr);
+            if (item.setExpiryDate(expiryStr)) {
+                System.out.println("Expiry date successfully set to: " + item.getExpiryDate());
+            } else {
+                System.out.println("Item will be created without expiry date due to invalid format.");
+            }
+        } else {
+            System.out.println("No expiry date provided - item will not expire.");
         }
         
         if (inventoryManager.addItem(item)) {
-            System.out.println("Item added successfully! ID: " + item.getId());
-            System.out.println("Generated Barcode: " + item.getBarcode());
+            System.out.println("\nItem added successfully!");
+            System.out.println("ID: " + item.getId());
+            System.out.println("Barcode: " + item.getBarcode());
+            
+            if (item.getExpiryDate() != null) {
+                System.out.println("Expiry Date: " + item.getExpiryDate() + " (" + item.getExpiryStatus() + ")");
+            } else {
+                System.out.println("Expiry Date: Not set");
+            }
+            
             logTransaction("ADD_ITEM", "Added item: " + name + " (ID: " + item.getId() + ")");
         } else {
             System.out.println("Failed to add item!");
@@ -198,7 +212,7 @@ public class InventoryManagementSystem {
                 status += " EXPIRING";
             }
             
-            System.out.printf("%-5s %-20s %-15s %-10d $%-9.2f %-15s%n",
+            System.out.printf("%-5s %-20s %-15s %-10d Rs %-9.2f %-15s%n",
                 item.getId(), 
                 item.getName().length() > 20 ? item.getName().substring(0, 17) + "..." : item.getName(),
                 item.getCategory(), 
@@ -397,7 +411,7 @@ public class InventoryManagementSystem {
             System.out.println("Name: " + item.getName());
             System.out.println("Category: " + item.getCategory());
             System.out.println("Quantity: " + item.getQuantity());
-            System.out.println("Price: $" + item.getPrice());
+            System.out.println("Price: Rs" + item.getPrice());
             System.out.println("Barcode: " + item.getBarcode());
         } else {
             System.out.println("No item found with barcode: " + barcode);
@@ -412,7 +426,7 @@ public class InventoryManagementSystem {
         
         System.out.println("\n=== Search Results for " + searchCriteria + " ===");
         for (Item item : results) {
-            System.out.printf("%s - %s [%s] (Qty: %d, Price: $%.2f)%n",
+            System.out.printf("%s - %s [%s] (Qty: %d, Price: Rs%.2f)%n",
                 item.getId(), item.getName(), item.getCategory(), 
                 item.getQuantity(), item.getPrice());
         }
@@ -670,7 +684,8 @@ public class InventoryManagementSystem {
     
     private static int getIntInput() {
         try {
-            return Integer.parseInt(scanner.nextLine());
+            String input = scanner.nextLine().trim();
+            return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             return -1;
         }
@@ -678,7 +693,8 @@ public class InventoryManagementSystem {
     
     private static double getDoubleInput() {
         try {
-            return Double.parseDouble(scanner.nextLine());
+            String input = scanner.nextLine().trim();
+            return Double.parseDouble(input);
         } catch (NumberFormatException e) {
             return 0.0;
         }
@@ -776,11 +792,10 @@ public class InventoryManagementSystem {
         Map<String, Object> analytics = AnalyticsService.getInventoryAnalytics(items);
         
         System.out.printf("Total Items: %d%n", analytics.get("totalItems"));
-        System.out.printf("Total Value: $%.2f%n", analytics.get("totalValue"));
-        System.out.printf("Average Price: $%.2f%n", analytics.get("averagePrice"));
+        System.out.printf("Total Value: Rs %.2f%n", analytics.get("totalValue"));
+        System.out.printf("Average Price: Rs %.2f%n", analytics.get("averagePrice"));
         System.out.printf("Low Stock Percentage: %.1f%%%n", analytics.get("lowStockPercentage"));
         
-        // Show purchase recommendations
         List<String> recommendations = AnalyticsService.generatePurchaseRecommendations(items);
         if (!recommendations.isEmpty()) {
             System.out.println("\n=== Purchase Recommendations ===");
@@ -796,10 +811,8 @@ public class InventoryManagementSystem {
     private static void showNotifications() {
         System.out.println("\n=== System Notifications ===");
         
-        // Generate fresh notifications
         NotificationService.generateDailyNotifications(inventoryManager.getAllItems());
         
-        // Show recent notifications
         List<String> notifications = NotificationService.getRecentNotifications(10);
         if (notifications.isEmpty()) {
             System.out.println("No notifications to display.");
@@ -831,53 +844,53 @@ public class InventoryManagementSystem {
         InventorySummary summary = calculateInventorySummary(allItems);
         
         System.out.println("\n" + "─".repeat(60));
-        System.out.println("📊 INVENTORY OVERVIEW");
+        System.out.println("INVENTORY OVERVIEW");
         System.out.println("─".repeat(60));
         
         // Basic inventory stats
         System.out.printf("Total Items in System: %d%n", summary.totalItems);
         System.out.printf("Total Categories: %d%n", summary.totalCategories);
-        System.out.printf("Total Inventory Value: $%.2f%n", summary.totalValue);
-        System.out.printf("Average Item Value: $%.2f%n", summary.averageItemValue);
+        System.out.printf("Total Inventory Value: Rs %.2f%n", summary.totalValue);
+        System.out.printf("Average Item Value: Rs %.2f%n", summary.averageItemValue);
         
         System.out.println("\n" + "─".repeat(60));
-        System.out.println("⚠️  ALERTS & ATTENTION REQUIRED");
+        System.out.println("ALERTS & ATTENTION REQUIRED");
         System.out.println("─".repeat(60));
         
         // Critical alerts
         if (summary.expiredItems > 0) {
-            System.out.printf("❌ EXPIRED ITEMS: %d items have expired and need immediate attention!%n", 
+            System.out.printf("EXPIRED ITEMS: %d items have expired and need immediate attention!%n", 
                 summary.expiredItems);
         }
         
         if (summary.expiringItems > 0) {
-            System.out.printf("⏰ EXPIRING SOON: %d items will expire within 7 days%n", 
+            System.out.printf("EXPIRING SOON: %d items will expire within 7 days%n", 
                 summary.expiringItems);
         }
         
         if (summary.lowStockItems > 0) {
-            System.out.printf("📉 LOW STOCK: %d items need restocking%n", summary.lowStockItems);
+            System.out.printf("LOW STOCK: %d items need restocking%n", summary.lowStockItems);
         }
         
         if (summary.outOfStockItems > 0) {
-            System.out.printf("🚫 OUT OF STOCK: %d items have zero quantity%n", summary.outOfStockItems);
+            System.out.printf("OUT OF STOCK: %d items have zero quantity%n", summary.outOfStockItems);
         }
         
         // If no alerts
         if (summary.expiredItems == 0 && summary.expiringItems == 0 && 
             summary.lowStockItems == 0 && summary.outOfStockItems == 0) {
-            System.out.println("✅ All items are in good condition - no immediate alerts!");
+            System.out.println("All items are in good condition - no immediate alerts!");
         }
         
         // Top categories by value
         if (!summary.topCategories.isEmpty()) {
             System.out.println("\n" + "─".repeat(60));
-            System.out.println("🏆 TOP CATEGORIES BY VALUE");
+            System.out.println("TOP CATEGORIES BY VALUE");
             System.out.println("─".repeat(60));
             
             int rank = 1;
             for (Map.Entry<String, Double> entry : summary.topCategories.entrySet()) {
-                System.out.printf("%d. %s: $%.2f%n", rank++, entry.getKey(), entry.getValue());
+                System.out.printf("%d. %s: Rs %.2f%n", rank++, entry.getKey(), entry.getValue());
                 if (rank > 5) break; // Show top 5
             }
         }
@@ -887,20 +900,20 @@ public class InventoryManagementSystem {
         
         // Action recommendations
         System.out.println("\n" + "─".repeat(60));
-        System.out.println("💡 RECOMMENDED ACTIONS");
+        System.out.println("RECOMMENDED ACTIONS");
         System.out.println("─".repeat(60));
         
         if (summary.lowStockItems > 0) {
-            System.out.println("• Review low stock items and create purchase orders");
+            System.out.println("Review low stock items and create purchase orders");
         }
         if (summary.expiredItems > 0) {
-            System.out.println("• Remove expired items from inventory");
+            System.out.println("Remove expired items from inventory");
         }
         if (summary.expiringItems > 0) {
-            System.out.println("• Plan promotions for items expiring soon");
+            System.out.println("Plan promotions for items expiring soon");
         }
         if (summary.totalItems == 0) {
-            System.out.println("• Add items to start managing your inventory");
+            System.out.println("Add items to start managing your inventory");
         }
         
         System.out.println("\n" + "=".repeat(60));
@@ -980,8 +993,8 @@ public class InventoryManagementSystem {
         List<String> recentLogs = ExportUtils.getTransactionLogs();
         if (!recentLogs.isEmpty()) {
             System.out.println("\n" + "─".repeat(60));
-            System.out.println("📋 RECENT ACTIVITY (Last 5 transactions)");
-            System.out.println("─".repeat(60));
+            System.out.println("RECENT ACTIVITY (Last 5 transactions)");
+            System.out.println(" ".repeat(60));
             
             int count = Math.min(5, recentLogs.size());
             for (int i = recentLogs.size() - count; i < recentLogs.size(); i++) {
@@ -990,7 +1003,7 @@ public class InventoryManagementSystem {
                 if (log.length() > 80) {
                     log = log.substring(0, 77) + "...";
                 }
-                System.out.println("• " + log);
+                System.out.println(" " + log);
             }
         }
     }

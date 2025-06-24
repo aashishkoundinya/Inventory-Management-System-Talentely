@@ -18,3 +18,23 @@
 [2025-06-23 20:14:35] admin - LOGIN: User logged in: admin
 [2025-06-23 20:15:19] admin - DELETE_ITEM: Deleted item: ITMC328D8AC
 [2025-06-23 20:16:48] admin - ADD_ITEM: Added item: Riding Jacket (ID: ITMEE1C276E)
+[2025-06-24 09:07:07] admin - LOGIN: User logged in: admin
+[2025-06-24 09:14:45] admin - LOGIN: User logged in: admin
+[2025-06-24 20:12:50] admin - LOGIN: User logged in: admin
+[2025-06-24 20:14:42] admin - LOGIN: User logged in: admin
+[2025-06-24 20:18:41] admin - LOGIN: User logged in: admin
+[2025-06-24 20:20:15] admin - LOGOUT: User logged out: admin
+[2025-06-24 20:20:33] admin - LOGIN: User logged in: admin
+[2025-06-24 20:21:56] admin - LOGIN: User logged in: admin
+[2025-06-24 20:23:34] admin - LOGIN: User logged in: admin
+[2025-06-24 20:25:06] admin - ADD_ITEM: Added item: Whey Protein (ID: ITM086FDCD4)
+[2025-06-24 20:27:47] admin - LOGIN: User logged in: admin
+[2025-06-24 20:30:28] admin - LOGIN: User logged in: admin
+[2025-06-24 20:34:28] aashish - LOGIN: User logged in: aashish
+[2025-06-24 20:34:33] aashish - EXPORT: Exported inventory to CSV: inventory_export_20250624_203433.csv
+[2025-06-24 20:39:40] admin - LOGIN: User logged in: admin
+[2025-06-24 20:40:36] admin - ADD_ITEM: Added item: Creatine (ID: ITM17F18BE3)
+[2025-06-24 20:50:08] admin - LOGIN: User logged in: admin
+[2025-06-24 20:51:35] admin - ADD_ITEM: Added item: Paneer (ID: ITM5BCC14BC)
+[2025-06-24 20:55:29] admin - LOGIN: User logged in: admin
+[2025-06-24 20:55:40] admin - EXPORT: Exported inventory to CSV: inventory_export_20250624_205540.csv

@@ -7,15 +7,24 @@ import java.util.*;
 public class ExportUtils {
     private static final String TRANSACTIONS_FILE = "data/transactions.log";
     private static final String BACKUP_DIR = "data/backups/";
+    private static final String EXPORTS_DIR = "exports/"; // Add this line
     
     public static boolean exportToCSV(List<Item> items, String filename) {
         try {
-            File file = new File(filename);
-            file.getParentFile().mkdirs();
+            // Create exports directory if it doesn't exist
+            File exportsDir = new File(EXPORTS_DIR);
+            if (!exportsDir.exists()) {
+                exportsDir.mkdirs();
+            }
+            
+            // Create full file path
+            File file = new File(EXPORTS_DIR + filename);
             
             try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+                // Write header
                 writer.println("ID,Name,Category,Quantity,Price,Description,LowStockThreshold,Barcode,ExpiryDate");
                 
+                // Write data
                 for (Item item : items) {
                     writer.printf("%s,%s,%s,%d,%.2f,%s,%d,%s,%s%n",
                         escapeCSV(item.getId()),
@@ -30,9 +39,12 @@ public class ExportUtils {
                     );
                 }
             }
+            
+            System.out.println("✅ File saved at: " + file.getAbsolutePath());
             return true;
+            
         } catch (IOException e) {
-            System.err.println("Error exporting to CSV: " + e.getMessage());
+            System.err.println("❌ Error exporting to CSV: " + e.getMessage());
             return false;
         }
     }
@@ -72,7 +84,7 @@ public class ExportUtils {
             String[] children = source.list();
             if (children != null) {
                 for (String child : children) {
-                    if (!child.equals("backups")) { // Don't backup the backup directory itself
+                    if (!child.equals("backups")) {
                         copyDirectory(new File(source, child), new File(target, child));
                     }
                 }
@@ -92,7 +104,11 @@ public class ExportUtils {
     public static void logTransaction(String logEntry) {
         try {
             File logFile = new File(TRANSACTIONS_FILE);
-            logFile.getParentFile().mkdirs();
+            
+            File parentDir = logFile.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
             
             try (PrintWriter writer = new PrintWriter(new FileWriter(logFile, true))) {
                 writer.println(logEntry);

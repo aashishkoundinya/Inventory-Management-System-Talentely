@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class Item implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String id;
+    final private String id;
     private String name;
     private String category;
     private int quantity;
@@ -15,8 +15,8 @@ public class Item implements Serializable {
     private String description;
     private int lowStockThreshold;
     private LocalDate expiryDate;
-    private String barcode;
-    private LocalDate dateAdded;
+    final private String barcode;
+    final private LocalDate dateAdded;
     
     public Item(String name, String category, int quantity, double price, String description, int lowStockThreshold) {
         this.id = "ITM" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -36,23 +36,41 @@ public class Item implements Serializable {
     
     public boolean isExpiring() {
         if (expiryDate == null) return false;
-        return ChronoUnit.DAYS.between(LocalDate.now(), expiryDate) <= 7;
+        long daysUntilExpiry = ChronoUnit.DAYS.between(LocalDate.now(), expiryDate);
+        return daysUntilExpiry > 0 && daysUntilExpiry <= 7;
     }
     
     public boolean isExpired() {
         if (expiryDate == null) return false;
-        return expiryDate.isBefore(LocalDate.now());
+        return expiryDate.isBefore(LocalDate.now()) || expiryDate.equals(LocalDate.now());
     }
     
-    public void setExpiryDate(String dateStr) {
+    public boolean setExpiryDate(String dateStr) {
         try {
             this.expiryDate = LocalDate.parse(dateStr);
+            System.out.println("✅ Expiry date set to: " + this.expiryDate);
+            return true;
         } catch (Exception e) {
-            System.out.println("Invalid date format. Use YYYY-MM-DD");
+            System.out.println("❌ Invalid date format: '" + dateStr + "'. Use YYYY-MM-DD format (e.g., 2024-12-25)");
+            return false;
         }
     }
     
-    // Getters and Setters
+    public long getDaysUntilExpiry() {
+        if (expiryDate == null) return Long.MAX_VALUE;
+        return ChronoUnit.DAYS.between(LocalDate.now(), expiryDate);
+    }
+    
+    public String getExpiryStatus() {
+        if (expiryDate == null) return "No expiry date";
+        
+        long days = getDaysUntilExpiry();
+        if (days < 0) return "Expired " + Math.abs(days) + " days ago";
+        if (days == 0) return "Expires today";
+        if (days <= 7) return "Expires in " + days + " days";
+        return "Expires in " + days + " days";
+    }
+    
     public String getId() { return id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -73,7 +91,8 @@ public class Item implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("Item{id='%s', name='%s', category='%s', quantity=%d, price=%.2f}", 
-                           id, name, category, quantity, price);
+        return String.format("Item{id='%s', name='%s', category='%s', quantity=%d, price=%.2f, expiry=%s}", 
+                           id, name, category, quantity, price, 
+                           expiryDate != null ? expiryDate.toString() : "No expiry");
     }
 }

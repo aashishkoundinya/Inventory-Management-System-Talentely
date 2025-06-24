@@ -25,7 +25,7 @@ public class InputValidator {
     
     public static boolean isValidNumber(String str) {
         try {
-            Double.parseDouble(str);
+            Double.valueOf(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -34,7 +34,7 @@ public class InputValidator {
     
     public static boolean isValidInteger(String str) {
         try {
-            Integer.parseInt(str);
+            Integer.valueOf(str);
             return true;
         } catch (NumberFormatException e) {
             return false;

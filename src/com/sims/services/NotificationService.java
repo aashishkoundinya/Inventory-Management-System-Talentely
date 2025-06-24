@@ -14,7 +14,6 @@ public class NotificationService {
         String notification = String.format("[%s] %s: %s", timestamp, type, message);
         notifications.add(notification);
         
-        // Keep only last 50 notifications
         if (notifications.size() > 50) {
             notifications.remove(0);
         }

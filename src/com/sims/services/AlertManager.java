@@ -1,8 +1,6 @@
 package com.sims.services;
 
 import com.sims.models.Item;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +12,7 @@ public class AlertManager {
         List<Item> expiredItems = getExpiredItems(items);
         
         if (!lowStockItems.isEmpty()) {
-            System.out.println("⚠️  LOW STOCK ALERT: " + lowStockItems.size() + " items need restocking");
+            System.out.println("⚠️ LOW STOCK ALERT: " + lowStockItems.size() + " items need restocking");
         }
         
         if (!expiringItems.isEmpty()) {
@@ -54,7 +52,7 @@ public class AlertManager {
     
     public static String getReorderSuggestion(Item item) {
         if (item.getQuantity() <= item.getLowStockThreshold()) {
-            int suggestedOrder = item.getLowStockThreshold() * 2; // Simple logic
+            int suggestedOrder = item.getLowStockThreshold() * 2;
             return "Suggested reorder quantity: " + suggestedOrder;
         }
         return "Stock level is adequate";
