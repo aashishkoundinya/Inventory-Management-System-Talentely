@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 
 public class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String id;
-    private String userId;
-    private String action;
-    private String details;
-    private LocalDateTime timestamp;
+    final private String id;
+    final private String userId;
+    final private String action;
+    final private String details;
+    final private LocalDateTime timestamp;
     
     public Transaction(String userId, String action, String details) {
         this.id = "TXN" + System.currentTimeMillis();

@@ -12,15 +12,15 @@ public class AlertManager {
         List<Item> expiredItems = getExpiredItems(items);
         
         if (!lowStockItems.isEmpty()) {
-            System.out.println("⚠️ LOW STOCK ALERT: " + lowStockItems.size() + " items need restocking");
+            System.out.println("LOW STOCK ALERT: " + lowStockItems.size() + " items need restocking");
         }
         
         if (!expiringItems.isEmpty()) {
-            System.out.println("⏰ EXPIRY ALERT: " + expiringItems.size() + " items expiring soon");
+            System.out.println("EXPIRY ALERT: " + expiringItems.size() + " items expiring soon");
         }
         
         if (!expiredItems.isEmpty()) {
-            System.out.println("❌ EXPIRED ALERT: " + expiredItems.size() + " items have expired");
+            System.out.println("EXPIRED ALERT: " + expiredItems.size() + " items have expired");
         }
     }
     

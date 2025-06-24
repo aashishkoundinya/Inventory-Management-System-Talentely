@@ -7,24 +7,20 @@ import java.util.*;
 public class ExportUtils {
     private static final String TRANSACTIONS_FILE = "data/transactions.log";
     private static final String BACKUP_DIR = "data/backups/";
-    private static final String EXPORTS_DIR = "exports/"; // Add this line
+    private static final String EXPORTS_DIR = "exports/";
     
     public static boolean exportToCSV(List<Item> items, String filename) {
         try {
-            // Create exports directory if it doesn't exist
             File exportsDir = new File(EXPORTS_DIR);
             if (!exportsDir.exists()) {
                 exportsDir.mkdirs();
             }
-            
-            // Create full file path
+
             File file = new File(EXPORTS_DIR + filename);
             
             try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-                // Write header
                 writer.println("ID,Name,Category,Quantity,Price,Description,LowStockThreshold,Barcode,ExpiryDate");
                 
-                // Write data
                 for (Item item : items) {
                     writer.printf("%s,%s,%s,%d,%.2f,%s,%d,%s,%s%n",
                         escapeCSV(item.getId()),
@@ -40,11 +36,11 @@ public class ExportUtils {
                 }
             }
             
-            System.out.println("✅ File saved at: " + file.getAbsolutePath());
+            System.out.println("File saved at: " + file.getAbsolutePath());
             return true;
             
         } catch (IOException e) {
-            System.err.println("❌ Error exporting to CSV: " + e.getMessage());
+            System.err.println("Error exporting to CSV: " + e.getMessage());
             return false;
         }
     }

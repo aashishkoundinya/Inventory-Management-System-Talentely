@@ -26,11 +26,9 @@ public class NotificationService {
     }
     
     public static void generateDailyNotifications(List<Item> items) {
-        // Clear old notifications for the day
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         notifications.removeIf(notif -> notif.contains(today));
         
-        // Generate new notifications
         for (Item item : items) {
             if (item.getQuantity() == 0) {
                 addNotification("CRITICAL", item.getName() + " is out of stock");

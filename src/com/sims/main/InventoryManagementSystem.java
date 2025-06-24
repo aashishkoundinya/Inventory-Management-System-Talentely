@@ -28,11 +28,21 @@ public class InventoryManagementSystem {
         while (currentUser == null) {
             showLoginMenu();
         }
-        
+
+        createStartupBackup();
         showEnhancedDashboard();
         
         while (true) {
             showMainMenu();
+        }
+    }
+
+    private static void createStartupBackup() {
+        String backupName = "auto_backup_" + 
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        
+        if (ExportUtils.createBackup(backupName)) {
+            System.out.println("Automatic backup created: " + backupName);
         }
     }
     

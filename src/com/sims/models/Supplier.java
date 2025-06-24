@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public class Supplier implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String id;
+    final private String id;
     private String name;
     private String contactPerson;
     private String email;
     private String phone;
     private String address;
-    private LocalDateTime createdDate;
+    final private LocalDateTime createdDate;
     
     public Supplier(String name, String contactPerson, String email, String phone, String address) {
         this.id = "SUP" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();

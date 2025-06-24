@@ -17,7 +17,7 @@ public class UserManager {
     
     public boolean registerUser(String username, String password, String role) {
         if (getUserByUsername(username) != null) {
-            return false; // User already exists
+            return false;
         }
         
         String hashedPassword = SecurityUtils.hashPassword(password);
