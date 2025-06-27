@@ -46,3 +46,19 @@
 [2025-06-24 22:04:28] aashish - EXPORT: Exported inventory to CSV: inventory_export_20250624_220428.csv
 [2025-06-24 22:04:39] aashish - BACKUP: Created backup: backup_20250624_220439
 [2025-06-24 23:56:24] aashish - LOGIN: User logged in: aashish
+[2025-06-25 08:59:48] admin - LOGIN: User logged in: admin
+[2025-06-25 09:00:58] admin - EXPORT: Exported inventory to CSV: inventory_export_20250625_090058.csv
+[2025-06-25 09:09:17] aashish - LOGIN: User logged in: aashish
+[2025-06-25 09:11:08] admin - LOGIN: User logged in: admin
+[2025-06-25 09:12:47] admin - EXPORT: Exported inventory to CSV: inventory_export_20250625_091247.csv
+[2025-06-25 09:39:36] admin - LOGIN: User logged in: admin
+[2025-06-25 09:48:05] admin - ADD_USER: Added user: arnav (Role: Admin)
+[2025-06-25 09:48:23] admin - LOGOUT: User logged out: admin
+[2025-06-25 09:48:30] arnav - LOGIN: User logged in: arnav
+[2025-06-25 09:48:46] arnav - LOGOUT: User logged out: arnav
+[2025-06-25 09:49:20] arnav - LOGIN: User logged in: arnav
+[2025-06-25 09:51:44] arnav - ADD_ITEM: Added item: Nothing (ID: ITME1AB603F)
+[2025-06-25 11:01:05] admin - LOGIN: User logged in: admin
+[2025-06-27 09:31:55] aashish - LOGIN: User logged in: aashish
+[2025-06-27 09:33:51] aashish - ADD_ITEM: Added item: Watch (ID: ITMC7C73208)
+[2025-06-27 09:35:40] aashish - EXPORT: Exported inventory to CSV: inventory_export_20250627_093540.csv

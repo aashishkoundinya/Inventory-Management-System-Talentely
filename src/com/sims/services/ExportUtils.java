@@ -20,6 +20,7 @@ public class ExportUtils {
             
             try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
                 writer.println("ID,Name,Category,Quantity,Price,Description,LowStockThreshold,Barcode,ExpiryDate");
+                writer.println(" ");
                 
                 for (Item item : items) {
                     writer.printf("%s,%s,%s,%d,%.2f,%s,%d,%s,%s%n",

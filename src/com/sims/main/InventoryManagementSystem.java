@@ -531,20 +531,54 @@ public class InventoryManagementSystem {
                 item.getLowStockThreshold());
         }
     }
-    
+
     private static void showExpiryReport() {
         List<Item> expiringItems = AlertManager.getExpiringItems(inventoryManager.getAllItems());
-        if (expiringItems.isEmpty()) {
-            System.out.println("No items expiring soon.");
-            return;
-        }
+        List<Item> expiredItems = AlertManager.getExpiredItems(inventoryManager.getAllItems());
         
         System.out.println("\n=== Expiry Report ===");
-        for (Item item : expiringItems) {
-            System.out.printf("%s - %s (Expires: %s)%n",
-                item.getId(), item.getName(), 
-                item.getExpiryDate() != null ? item.getExpiryDate().toString() : "No expiry");
+        
+        if (!expiredItems.isEmpty()) {
+            System.out.println("EXPIRED ITEMS (Immediate Action Required):");
+            System.out.println("-".repeat(50));
+            for (Item item : expiredItems) {
+                long daysExpired = Math.abs(item.getDaysUntilExpiry());
+                System.out.printf("%s - %s%n", item.getId(), item.getName());
+                System.out.printf("   Expired: %s (%d days ago)%n", 
+                    item.getExpiryDate(), daysExpired);
+                System.out.printf("   Quantity: %d | Category: %s%n", 
+                    item.getQuantity(), item.getCategory());
+                System.out.println("   ────────────");
+            }
+            System.out.println();
         }
+        
+        if (!expiringItems.isEmpty()) {
+            System.out.println("EXPIRING SOON (Within 7 Days):");
+            System.out.println("-".repeat(50));
+            for (Item item : expiringItems) {
+                System.out.printf("%s - %s%n", item.getId(), item.getName());
+                System.out.printf("   Expires: %s (%s)%n", 
+                    item.getExpiryDate(), item.getExpiryStatus());
+                System.out.printf("   Quantity: %d | Category: %s%n", 
+                    item.getQuantity(), item.getCategory());
+                System.out.println("   ────────────");
+            }
+        }
+        
+        // Summary
+        if (expiredItems.isEmpty() && expiringItems.isEmpty()) {
+            System.out.println("No expired or expiring items found!");
+        } else {
+            System.out.println("\nSUMMARY:");
+            System.out.printf("   Expired Items: %d%n", expiredItems.size());
+            System.out.printf("   Expiring Soon: %d%n", expiringItems.size());
+            System.out.printf("   Total Items Needing Attention: %d%n", 
+                expiredItems.size() + expiringItems.size());
+        }
+        
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
     }
     
     private static void showUserMenu() {
